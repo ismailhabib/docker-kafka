@@ -4,7 +4,7 @@ zookeeper:
   ports:
     - "2181:2181"
 kafka:
-  image: ismailhabib/kafka
+  image: ismailhabib/docker-kafka
   container_name: kafka
   links:
     - zookeeper:zookeeper
