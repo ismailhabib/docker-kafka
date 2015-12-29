@@ -1,0 +1,16 @@
+zookeeper:
+  image: jplock/zookeeper:3.4.6
+  container_name: zookeeper
+  ports:
+    - "2181:2181"
+kafka:
+  image: ismailhabib/kafka
+  container_name: kafka
+  links:
+    - zookeeper:zookeeper
+  environment:
+    KAFKA_ADVERTISED_HOST_NAME: 192.168.99.100
+    ZOOKEEPER_IP: 192.168.99.100
+  ports:
+    - "9092:9092"
+    - "7203:7203"

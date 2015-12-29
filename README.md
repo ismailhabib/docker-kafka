@@ -3,7 +3,7 @@ Apache Kafka on Docker
 
 This repository holds a build definition and supporting files for building a
 [Docker] image to run [Kafka] in containers. It is published as an Automated
-Build [on the Docker registry], as `ches/kafka`.
+Build [on the Docker registry], as `ismailhabib/docker-kafka`.
 
 This build intends to provide an operator-friendly Kafka deployment suitable for
 usage in a production Docker environment:
@@ -29,21 +29,24 @@ from [the Kafka Quick Start]:
 
 ```
 $ docker run -d --name zookeeper jplock/zookeeper:3.4.6
-$ docker run -d --name kafka --link zookeeper:zookeeper ches/kafka
+$ docker run -d --name kafka --link zookeeper:zookeeper ismailhabib/docker-kafka
+
+# Or if you want to run them with Docker Compose
+$ docker-compose up
 
 $ ZK_IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' zookeeper)
 $ KAFKA_IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' kafka)
 
-$ docker run --rm ches/kafka \
+$ docker run --rm ismailhabib/docker-kafka \
 >   kafka-topics.sh --create --topic test --replication-factor 1 --partitions 1 --zookeeper $ZK_IP:2181
 Created topic "test".
 
 # In separate terminals:
-$ docker run --rm --interactive ches/kafka \
+$ docker run --rm --interactive ismailhabib/docker-kafka \
 >   kafka-console-producer.sh --topic test --broker-list $KAFKA_IP:9092
 <type some messages followed by newline>
 
-$ docker run --rm ches/kafka \
+$ docker run --rm ismailhabib/docker-kafka \
 >   kafka-console-consumer.sh --topic test --from-beginning --zookeeper $ZK_IP:2181
 ```
 
@@ -88,7 +91,7 @@ $ docker run -d \
     --volume ./data:/data --volume ./logs:/logs \
     --publish 9092:9092 --publish 7203:7203 \
     --env KAFKA_ADVERTISED_HOST_NAME=127.0.0.1 --env ZOOKEEPER_IP=127.0.0.1 \
-    ches/kafka
+    ismailhabib/docker-kafka
 ```
 
 Configuration
@@ -169,7 +172,7 @@ your host OS to `$(docker-machine ip):7203`:
     $ docker run -d --name kafka -p 7203:7203 \
         --link zookeeper:zookeeper \
         --env JAVA_RMI_SERVER_HOSTNAME=$(docker-machine ip) \
-        ches/kafka
+        ismailhabib/docker-kafka
 
 Note that it is fussy about port as well---it may not work if the same port
 number is not used within the container and on the host (any advice for
@@ -186,26 +189,8 @@ the Kafka container(s).
 If you need finer-grained configuration, you can totally control the relevant
 Java system properties by setting `KAFKA_JMX_OPTS` yourself---see `start.sh`.
 
-Fork Legacy
------------
-
-This image/repo was originally forked from [relateiq/kafka]. My original
-motivations for forking were:
-
-- Change the Kafka binary source to an official Apache artifact. RelateIQ's was
-  on a private S3 bucket, and this opaqueness is not suitable for a
-  publicly-shared image for reasons of trust.
-- Changes described in [this pull request](https://github.com/relateiq/docker-kafka/pull/4).
-
-After a period of unresponsiveness from upstream on pull requests and my repo
-tallying far more downloads on Docker Hub, I have made further updates and
-changes with the expectation of maintaining independently from here on. This
-project's changelog file describes these in detail.
-
 
 [Docker]: http://www.docker.io
 [Kafka]: http://kafka.apache.org
-[on the Docker registry]: https://registry.hub.docker.com/u/ches/kafka/
-[relateiq/kafka]: https://github.com/relateiq/docker-kafka
+[on the Docker registry]: https://registry.hub.docker.com/u/ismailhabib/docker-kafka/
 [the Kafka Quick Start]: http://kafka.apache.org/documentation.html#quickstart
-
